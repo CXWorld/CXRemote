@@ -1,0 +1,109 @@
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0.0"
+  title: "CXRemote"
+  contact:
+    email: "contact@capframex.com"
+  license:
+    name: "MIT"
+    url: "https://github.com/CXWorld/CXRemote/blob/main/LICENSE"
+host: "localhost:1337"
+basePath: "/api"
+schemes:
+- "http"
+paths:
+  /version:
+    get:
+      tags:
+      - "Version"
+      summary: "Get Version of CapFrameX"
+      description: ""
+      operationId: "getVersion"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Returns the Version of CapFrameX"
+          schema:
+            $ref: "#/definitions/VersionResponse"
+  /processes:
+    get:
+      tags:
+      - "Processes"
+      summary: "Get a list of capturable processes"
+      description: ""
+      operationId: "getProcesses"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Returns an array of processnames ready to capture"
+          schema:
+            $ref: "#/definitions/ProcessesResponse"
+  /capture:
+    post:
+      tags:
+      - "Capture"
+      summary: "Start a Capture"
+      description: "Starts a new capture"
+      operationId: "startCapture"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Parameters for startCapture Endpoint"
+        required: true
+        schema:
+            $ref: "#/definitions/StartCapturePayload"
+      responses:
+        "200":
+          description: "signals that capture has started"
+    delete:
+      tags:
+      - "Capture"
+      summary: "Stops a Capture"
+      description: "Stops the currently running capture"
+      operationId: "stopCapture"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "signals that capture has stopped"
+
+definitions:
+  VersionResponse:
+    type: "object"
+    properties:
+      Version:
+        type: "string"
+        description: "Major.Minor.Build.Revision"
+        example: "1.5.6.4"
+        
+  ProcessesResponse:
+    type: "array"
+    items:
+      type: "string"
+
+  StartCapturePayload:
+    type: "object"
+    properties:
+      CaptureTime:
+        type: "integer"
+        format: "int32"
+        default: 0
+        example: 9
+        description: "Automatically stops recording after given amount of seconds. 0 for infinite"
+      ProcessName:
+        type: "string"
+        description: "Name of the Process to Capture (without .exe suffix)"
+        example: "hearthstone"
+      RecordDirectory:
+        type: "string"
+        description: "The Directory the record shall be saved to"
+        example: "C:\\capframex\\Records"
+      CaptureFileMode:
+        type: "string"
